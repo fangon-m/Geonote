@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geonote</title>
+    <link rel="icon" type="image/png" href="assets/img/icon-01.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo-img"><img src="assets/img/logo-01.png" alt="Logo" style="width: 100%;"></div>
+        <div class="logo">Geonote</div>
+        <div class="user-info" id="userInfo">
+            <div class="auth-buttons" id="authButtons">
+                <button class="btn btn-secondary" onclick="showModal('loginModal')">Login</button>
+                <button class="btn btn-primary" onclick="showModal('registerModal')">Sign Up</button>
+            </div>
+            <div class="quota-display" id="quotaDisplay" style="display: none;">
+                Notes today: <span id="quotaCount">0</span>/10
+            </div>
+            <button class="btn btn-secondary" id="logoutBtn" style="display: none;" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="canvas-container">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <div class="zoom-controls">
+        <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">+</button>
+        <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">−</button>
+        <button class="zoom-btn" onclick="resetView()" title="Reset View" style="font-size: 18px;">⌂</button>
+    </div>
+
+    <div class="coordinates" id="coordinates">x: 0, y: 0</div>
+    <div class="zoom-info" id="zoomInfo">Zoom: 100%</div>
+
+    <div class="instructions">
+        <strong>How to play:</strong><br>
+        • Click anywhere to place a sticky note<br>
+        • Shift + drag to pan around<br>
+        • Mouse wheel to zoom in/out<br>
+        • Use zoom controls on the right<br>
+        • Each user gets 10 notes per day<br>
+        • All notes are anonymous<br>
+        • Notes persist forever!
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-cancel" onclick="hideModal('loginModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <h2>Create Account</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-cancel" onclick="hideModal('registerModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Note Modal -->
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <h2>Create Sticky Note</h2>
+            <form id="noteForm">
+                <div class="form-group">
+                    <label>Your Note</label>
+                    <textarea id="noteContent" placeholder="Write your note here..." maxlength="200" required></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-cancel" onclick="hideModal('noteModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Stick Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="script.js"></script>
+
+    <!-- Script for Grab Cursor-->
+     <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('gameCanvas');
+    let shiftHeld = false;
+
+    function updateCursor() {
+        if (shiftHeld) {
+            canvas.style.cursor = 'grab';
+        } else {
+            canvas.style.cursor = 'pointer';
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Shift') {
+            shiftHeld = true;
+            updateCursor();
+        }
+    });
+
+    document.addEventListener('keyup', function(e) {
+        if (e.key === 'Shift') {
+            shiftHeld = false;
+            updateCursor();
+        }
+    });
+
+    // Ensure correct cursor on mouse leave
+    canvas.addEventListener('mouseleave', function() {
+        shiftHeld = false;
+        updateCursor();
+    });
+});
+</script>
+
+</body>
+</html>
